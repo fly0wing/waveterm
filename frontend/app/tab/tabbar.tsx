@@ -18,7 +18,7 @@ import { TabBarEnv } from "./tabbarenv";
 import { UpdateStatusBanner } from "./updatebanner";
 import { WorkspaceSwitcher } from "./workspaceswitcher";
 
-const TabDefaultWidth = 130;
+const TabDefaultWidth = 200;
 const TabMinWidth = 100;
 const MacOSTrafficLightsWidth = 74;
 const MacOSTahoeTrafficLightsWidth = 80;

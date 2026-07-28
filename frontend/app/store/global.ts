@@ -407,6 +407,15 @@ async function createBlockSplitVertically(
 
 async function createBlock(blockDef: BlockDef, magnified = false, ephemeral = false): Promise<string> {
     const layoutModel = getLayoutModelForStaticTab();
+    if (blockDef?.meta?.view === "term" && blockDef.meta["cmd:cwd"] == null) {
+        const focusedBlockId = getFocusedBlockId();
+        if (focusedBlockId != null) {
+            const focusedCwd = globalStore.get(getBlockMetaKeyAtom(focusedBlockId, "cmd:cwd"));
+            if (focusedCwd != null) {
+                blockDef = { ...blockDef, meta: { ...blockDef.meta, "cmd:cwd": focusedCwd } };
+            }
+        }
+    }
     const rtOpts: RuntimeOpts = { termsize: { rows: 25, cols: 80 } };
     const blockId = await ObjectService.CreateBlock(blockDef, rtOpts);
     if (ephemeral) {

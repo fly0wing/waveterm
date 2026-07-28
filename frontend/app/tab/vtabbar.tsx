@@ -376,7 +376,13 @@ export function VTabBar({ workspace, className }: VTabBarProps) {
                             onSelect={() => env.electron.setActiveTab(tabId)}
                             onClose={() => fireAndForget(() => env.electron.closeTab(workspace.oid, tabId, false))}
                             onRename={(newName) =>
-                                fireAndForget(() => env.rpc.UpdateTabNameCommand(TabRpcClient, tabId, newName))
+                                fireAndForget(async () => {
+                                    await env.rpc.UpdateTabNameCommand(TabRpcClient, tabId, newName);
+                                    await env.rpc.SetMetaCommand(TabRpcClient, {
+                                        oref: makeORef("tab", tabId),
+                                        meta: { "tab:manualname": true },
+                                    });
+                                })
                             }
                             onDragStart={(event) => {
                                 didResetHoverForDragRef.current = false;

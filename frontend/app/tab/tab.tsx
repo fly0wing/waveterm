@@ -69,7 +69,7 @@ const TabV = forwardRef<HTMLDivElement, TabVProps>((props, ref) => {
         onRename,
         renameRef,
     } = props;
-    const MaxTabNameLength = 14;
+    const MaxTabNameLength = 30;
     const truncateTabName = (name: string) => [...(name ?? "")].slice(0, MaxTabNameLength).join("");
     const displayName = truncateTabName(tabName);
     const [originalName, setOriginalName] = useState(displayName);
@@ -157,7 +157,7 @@ const TabV = forwardRef<HTMLDivElement, TabVProps>((props, ref) => {
             editableRef.current.blur();
             event.preventDefault();
             event.stopPropagation();
-        } else if (curLen >= 14 && !["Backspace", "Delete", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        } else if (curLen >= MaxTabNameLength && !["Backspace", "Delete", "ArrowLeft", "ArrowRight"].includes(event.key)) {
             const selection = window.getSelection();
             if (!selection || selection.isCollapsed) {
                 event.preventDefault();
@@ -201,6 +201,7 @@ const TabV = forwardRef<HTMLDivElement, TabVProps>((props, ref) => {
                     onBlur={handleBlur}
                     onKeyDown={handleKeyDown}
                     suppressContentEditableWarning={true}
+                    title={!isEditable && tabName !== displayName ? tabName : undefined}
                 >
                     {displayName}
                 </div>
@@ -286,7 +287,13 @@ const TabInner = forwardRef<HTMLDivElement, TabProps>((props, ref) => {
 
     const handleRename = useCallback(
         (newName: string) => {
-            fireAndForget(() => env.rpc.UpdateTabNameCommand(TabRpcClient, id, newName));
+            fireAndForget(async () => {
+                await env.rpc.UpdateTabNameCommand(TabRpcClient, id, newName);
+                await env.rpc.SetMetaCommand(TabRpcClient, {
+                    oref: makeORef("tab", id),
+                    meta: { "tab:manualname": true },
+                });
+            });
             setTimeout(() => refocusNode(null), 10);
         },
         [id, env]
