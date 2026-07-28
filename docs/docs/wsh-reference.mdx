@@ -322,6 +322,32 @@ The `--pid` flag is not supported on Windows.
 
 ---
 
+## renametab
+
+Set the title of a tab.
+
+```sh
+wsh renametab [name]
+```
+
+Renames the current tab (or a specific tab via `--tabid`) to the given name. By default the tab id is read from the `WAVETERM_TABID` environment variable.
+
+Flags:
+
+- `--tabid string` - target a specific tab id (defaults to `WAVETERM_TABID`)
+
+Examples:
+
+```sh
+# Rename the current tab
+wsh renametab "Build Logs"
+
+# Rename a specific tab
+wsh renametab --tabid <tabid> "Server"
+```
+
+---
+
 ## run
 
 The `run` command creates a new terminal command block and executes a specified command within it. The command can be provided either as arguments after `--` or using the `-c` flag. Unless the `-x` or `-X` flags are passed, commands can be re-executed by pressing `Enter` once the command has finished running.
