@@ -44,3 +44,10 @@ docsite/
 .superpowers
 docs/superpowers
 .claude
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/prettier.xml
+/.idea/vcs.xml
+/.idea/waveterm.iml

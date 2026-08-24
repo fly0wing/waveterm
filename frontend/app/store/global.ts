@@ -416,6 +416,15 @@ async function createBlock(blockDef: BlockDef, magnified = false, ephemeral = fa
             }
         }
     }
+    if (blockDef?.meta?.view === "preview" && (blockDef.meta["file"] == null || blockDef.meta["file"] === "~")) {
+        const focusedBlockId = getFocusedBlockId();
+        if (focusedBlockId != null) {
+            const focusedCwd = globalStore.get(getBlockMetaKeyAtom(focusedBlockId, "cmd:cwd"));
+            if (focusedCwd != null) {
+                blockDef = { ...blockDef, meta: { ...blockDef.meta, file: focusedCwd } };
+            }
+        }
+    }
     const rtOpts: RuntimeOpts = { termsize: { rows: 25, cols: 80 } };
     const blockId = await ObjectService.CreateBlock(blockDef, rtOpts);
     if (ephemeral) {
